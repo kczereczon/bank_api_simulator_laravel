@@ -2,18 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\BankingAccount;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
-class UserFactory extends Factory
+class BankingAccountFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = BankingAccount::class;
 
     /**
      * Define the model's default state.
@@ -23,9 +22,8 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'active' => 1,
+            'nrb' => $this->faker->regexify('[0-9]{2}', true) . env('BANK_NUMBER', "false") . $this->faker->unique()->regexify('[0-9]{16}', true),
+            'balance' => $this->faker->randomFloat(2,0)
         ];
     }
 }
