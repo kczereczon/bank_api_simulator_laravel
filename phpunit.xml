@@ -27,6 +27,6 @@
         <server name="QUEUE_CONNECTION" value="sync"/>
         <server name="SESSION_DRIVER" value="array"/>
         <server name="TELESCOPE_ENABLED" value="false"/>
-        <server name="BANK_NUMBER" value="34133033"/>
+        <server name="BANK_NUMBER" value="3413303"/>
     </php>
 </phpunit>

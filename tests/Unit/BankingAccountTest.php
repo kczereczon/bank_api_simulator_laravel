@@ -11,6 +11,39 @@ class BankingAccountTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function testBankNumberControlSum()
+    {
+        $bankService = new BankService();
+
+        $number = $bankService->generateBankNumberWithControlSum();
+        $this->assertTrue($bankService->validateBankNumber($number));
+    }
+
+    public function testBankNumberControlSumGenerator()
+    {
+        $bankService = new BankService();
+        $number = "1030194";
+
+        $this->assertEquals("4", $bankService->generateControlSumBankNumber($number));
+    }
+
+    public function testGeneratingIban()
+    {
+        $bankService = new BankService();
+
+        $iban = $bankService->generateIban();
+        $this->assertTrue($bankService->validateIbanNumber($iban));
+    }
+
+    public function testIbanValidator()
+    {
+        $bankService = new BankService();
+
+        $iban = "PL61187010452078100052700001";
+
+        $this->assertTrue($bankService->validateIbanNumber($iban));
+    }
+
     public function testCreateBankingAccount()
     {
         $initBalance = rand(0, 400000);

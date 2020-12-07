@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\BankingAccount;
+use App\Services\BankService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BankingAccountFactory extends Factory
@@ -21,8 +22,10 @@ class BankingAccountFactory extends Factory
      */
     public function definition()
     {
+        $bankService = new BankService();
+
         return [
-            'nrb' => $this->faker->regexify('[0-9]{2}', true) . env('BANK_NUMBER', "false") . $this->faker->unique()->regexify('[0-9]{16}', true),
+            'nrb' => $bankService->generateIban(),
             'balance' => $this->faker->randomFloat(2,0)
         ];
     }

@@ -17,7 +17,7 @@ class CreateBankingAccountsTable extends Migration
             $table->id();
             $table->string("nrb");
             $table->bigInteger("user_id")->unsigned();
-            $table->float("balance");
+            $table->double("balance");
             $table->boolean("general_account")->default(false);
             $table->timestamps();
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\NotFoundBankNumberInConfig;
 use App\Models\BankingAccount;
 use App\Models\User;
 use Faker\Generator;
@@ -37,16 +38,109 @@ class BankService
         return $user;
     }
 
+    public function generateControlSumBankNumber(string $number) : int
+    {
+        //weight specified by iban standard
+        $weights = [3, 9, 7, 1, 3, 9, 7];
+
+        $sum = 0;
+
+        if(!$number) {
+            throw new NotFoundBankNumberInConfig("Not found bank number in config env('BANK_NUMBER'), make sure that you submited this key into .env file");
+        }
+
+        //sum all of weights time digits for obtain the control sum
+        for ($i=0; $i < strlen($number); $i++) {
+            $sum += $number[$i]*$weights[$i];
+        }
+
+        $controlSum = 10 - $sum%10;
+
+        return $controlSum;
+    }
+
+    public function generateBankNumberWithControlSum(string $customNumber = NULL) : string
+    {
+        $bankNumber = $customNumber ? $customNumber : env('BANK_NUMBER', false);
+
+        $controlSum = $this->generateControlSumBankNumber($bankNumber);
+
+        return $bankNumber.$controlSum;
+    }
+
+    public function validateBankNumber(string $number) : bool
+    {
+        $controlSumCurrent = substr($number, -1);
+        $controlSumExpected = $this->generateControlSumBankNumber(substr($number, 0, -1));
+
+        if($controlSumCurrent == $controlSumExpected) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function calcMod97(string $iban)
+    {
+        $mod = 0;
+        for ($i=0; $i < round(strlen($iban)/6); $i++) {
+            $mod = $i ? ($mod . substr($iban, $i*6, 6))%97 : substr($iban, $i*6, 6)%97;
+        }
+
+        return $mod;
+    }
+
+    public function generateControlSumOfIban(string $iban) : string
+    {
+        $mod = $this->calcMod97($iban);
+
+        return 98 - $mod;
+    }
+
+    public function generateIban() : string
+    {
+
+        $iban = $this->generateBankNumberWithControlSum() . date("Ymd");
+
+        $countOfBankingAccounts = BankingAccount::all()->count()+1;
+        $iban .= sprintf("%08d", $countOfBankingAccounts);
+
+        $p = ord("P")-55;
+        $l = ord("L")-55;
+
+        $ibanWithCountry = $iban.$p.$l."00";
+
+        $controlSum = $this->generateControlSumOfIban($ibanWithCountry);
+
+        return "PL" . $controlSum . $iban;
+    }
+
+    public function validateIbanNumber(string $iban) : bool
+    {
+        $controlSum = substr($iban, 2, 2);
+        $number = substr($iban, 4, 28);
+
+        $p = ord("P")-55;
+        $l = ord("L")-55;
+
+        $toValidate = $this->calcMod97($number.$p.$l.$controlSum);
+
+        if($toValidate == 1) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function createBankingAccount(int $balance = 0, User $user, bool $general = false) : BankingAccount
     {
-        $faker = Container::getInstance()->make(Generator::class);
+        $bankService = new BankService();
 
-        $nrb = $faker->regexify('[0-9]{2}', true) . env('BANK_NUMBER', "false") . $faker->unique()->regexify('[0-9]{16}', true);
+        $nrb = $bankService->generateIban();
 
         $bankingAccount = $user->bankingAccounts()->create([
             "balance" => $balance,
             "nrb" => $nrb,
-            "user" => $user->id,
             "general_account" => $general
         ]);
 
