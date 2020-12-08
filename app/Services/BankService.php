@@ -84,7 +84,9 @@ class BankService
     {
         $mod = 0;
         for ($i=0; $i < round(strlen($iban)/6); $i++) {
-            $mod = $i ? ($mod . substr($iban, $i*6, 6))%97 : substr($iban, $i*6, 6)%97;
+            $currentString = substr($iban, $i*6, 6);
+            $currentStringWithModulo = $mod.$currentString;
+            $mod = $i ? ($mod . substr($iban, $i*6, 6))%97 : $currentString%97;
         }
 
         return $mod;
@@ -94,18 +96,20 @@ class BankService
     {
         $mod = $this->calcMod97($iban);
 
-        return 98 - $mod;
+        return sprintf("%02d", 98 - $mod);
     }
 
     public function generateIban() : string
     {
-
+        //bbbbbbb yyyymmdd => 16
         $iban = $this->generateBankNumberWithControlSum() . date("Ymd");
 
         $countOfBankingAccounts = BankingAccount::all()->count()+1;
+        // 00000001
         $iban .= sprintf("%08d", $countOfBankingAccounts);
-
+        // 25
         $p = ord("P")-55;
+        // 21
         $l = ord("L")-55;
 
         $ibanWithCountry = $iban.$p.$l."00";

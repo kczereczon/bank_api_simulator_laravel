@@ -44,6 +44,24 @@ class BankingAccountTest extends TestCase
         $this->assertTrue($bankService->validateIbanNumber($iban));
     }
 
+    public function testIbanValidatorWithZero()
+    {
+        $bankService = new BankService();
+
+        $iban = "PL04000000000000000000000000";
+
+        $this->assertTrue($bankService->validateIbanNumber($iban));
+    }
+
+    public function testIbanControlSumGenerator()
+    {
+        $bankService = new BankService();
+
+        $iban = "000000000000000000000000252100";
+
+        $this->assertEquals("04", $bankService->generateControlSumOfIban($iban));
+    }
+
     public function testCreateBankingAccount()
     {
         $initBalance = rand(0, 400000);
