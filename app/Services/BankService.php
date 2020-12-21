@@ -33,7 +33,7 @@ class BankService
             "active" => 1
         ]);
 
-        $this->createBankingAccount($balance, $user, true);
+        $this->createBankingAccount($user, $balance, true);
 
         return $user;
     }
@@ -136,7 +136,7 @@ class BankService
         return false;
     }
 
-    public function createBankingAccount(int $balance = 0, User $user, bool $general = false) : BankingAccount
+    public function createBankingAccount(User $user, int $balance = 0, bool $general = false) : BankingAccount
     {
         $bankService = new BankService();
 

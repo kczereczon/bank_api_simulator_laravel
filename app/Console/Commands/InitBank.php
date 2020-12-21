@@ -39,7 +39,7 @@ class InitBank extends Command
     public function handle()
     {
         $bankService = new BankService();
-        $generalUser = $bankService->initBank(50000000);
+        $generalUser = $bankService->initBank(500000);
         $this->info("Bank initialized!");
         $this->line($generalUser);
         $this->info("Banking accounts!");
