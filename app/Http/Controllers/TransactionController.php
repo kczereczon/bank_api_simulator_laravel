@@ -3,7 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\NotFoundBankNumberInConfig;
+use App\Http\Requests\CreateTransactionRequest;
+use App\Models\BankingAccount;
+use App\Models\Transaction;
+use App\Services\BankService;
+use App\Services\TransactionService;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+
+use function PHPUnit\Framework\throwException;
 
 class TransactionController extends Controller
 {
@@ -87,13 +97,34 @@ class TransactionController extends Controller
     }
 
     public function createTransaction(CreateTransactionRequest $request){
-    //     nrb_ben: numer rachunku beneficjenta
-    
-	// nrb_prin: numer rachunku zleceniodawcy
-	// title: tytuł
-	// value: wartość
-	// name_ben: imie i nazwisko beneficjenta
+        $transactions = new Transaction();
+        /** @var Builder $prin_account */
+        $prin_account = new BankingAccount();
+        $ben_account = new BankingAccount();
 
+        $bankingAccountService = new BankService();
+        $transactionService = new TransactionService();
+
+        if($bankingAccountService->validateBankNumber($request->nrb_prin)){
+            $prin_account = $prin_account->where('nrb', 'LIKE', "%". $request->nrb_prin)->firstOrFail();
+
+        }else{
+            throw new Exception("Nieprawidłowy numer konta zleceniodawcy!");
+        }
+
+        if($bankingAccountService->validateBankNumber($request->nrb_ben)){
+            $ben_account = $ben_account->where('nrb', 'LIKE', "%". $request->nrb_ben)->first();
+
+        }else{
+            throw new Exception("Nieprawidłowy numer konta beneficjenta!");
+        }
+
+        if($ben_account!=null){
+            $transactionService->createInternalTransaction($ben_account->id,$prin_account->id, $request->amount, $request->title);
+            response()->json('Sukces',200);
+        }
+
+       
     }
 
 

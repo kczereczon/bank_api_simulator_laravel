@@ -17,7 +17,6 @@ class Transaction extends Model
         "title",
         "nrb_prin",
         "name_prin",
-        "direction",
         "realisation_date"
     ];
     
