@@ -34,7 +34,17 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $transactionService = new TransactionService();
+
+        try{
+            $transaction = $transactionService->createTransaction($request->nrb_ben, $request->name_ben, $request->address_ben, $request->amount, $request->title, $request->nrb_prin, $request->name_prin,$request->direction, $request->realisation_date);
+        } catch (NotFoundBankNumberInConfig $exception) {
+            return response($exception->getMessage(), $exception->getCode());
+        }
+
+        $transaction->bankingAccounts();
+
+        return response()->json($transaction);
     }
 
     /**
