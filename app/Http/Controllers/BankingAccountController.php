@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class BankingAccountController extends Controller
+
 {
     /**
      * Display a listing of the resource.
