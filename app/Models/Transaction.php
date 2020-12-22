@@ -31,4 +31,12 @@ class Transaction extends Model
         return $this->belongsTo(BankingAccount::class, "prin_banking_account_id");
     }
 
+    public function status(){
+        return $this->hasOne(Status::class, "status_id");
+    }
+
+    public function operation(){
+        return $this->hasOne(Operation::class, "operation_id");
+    }
+
 }

@@ -10,5 +10,8 @@ class Status extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
-    
+
+    public function transation(){
+        return $this->belongsTo(Transation::class, "status_id");
+    }
 }

@@ -28,11 +28,11 @@ class Operation extends Model
 
     public function prinAccount()
     {
-        return $this->belongsTo(User::class, "prin_banking_account_id");
+        return $this->belongsTo(BankingAccount::class, "prin_banking_account_id");
     }
 
     public function transaction()
     {
-        return $this->belongsTo(BankingAccount::class);
+        return $this->belongsTo(BankingAccount::class, "operation_id");
     }
 }
