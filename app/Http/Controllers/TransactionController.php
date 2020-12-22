@@ -46,7 +46,10 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        //
+        $tran = new Transaction();
+        $tran = $tran->findOrFail($id);
+
+        return response()->json($tran);
     }
 
     /**
