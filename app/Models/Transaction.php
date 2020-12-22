@@ -20,15 +20,15 @@ class Transaction extends Model
         "direction",
         "realisation_date"
     ];
-
-    public function bankingAccounts()
-    {
-        return $this->belongsTo(BankingAccount::class);
-    }
     
-    public function users()
+    public function benAccount()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(BankingAccount::class, "ben_banking_account_id");
+    }
+
+    public function prinAccount()
+    {
+        return $this->belongsTo(BankingAccount::class, "prin_banking_account_id");
     }
 
 }

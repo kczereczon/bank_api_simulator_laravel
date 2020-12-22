@@ -20,8 +20,8 @@ class CreateTransactionsTable extends Migration
             $table->string('address_ben')->nullable();
             $table->float('amount');
             $table->string('title');
-            $table->bigInteger('prin_client_id')->unsigned()->nullable();
-            $table->bigInteger('ben_client_id')->unsigned()->nullable();
+            $table->bigInteger('prin_banking_account_id')->unsigned()->nullable();
+            $table->bigInteger('ben_banking_account_id')->unsigned()->nullable();
             $table->string('nrb_prin');
             $table->string('name_prin');
             $table->bigInteger('status_id')->unsigned();
@@ -29,7 +29,8 @@ class CreateTransactionsTable extends Migration
             $table->date('realisation_date');
             $table->timestamps();
 
-            $table->foreign('ben_client_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('ben_banking_account_id')->references('id')->on('banking_accounts')->onDelete('cascade');
+            $table->foreign('ben_banking_account_id')->references('id')->on('banking_accounts')->onDelete('cascade');
             $table->foreign('status_id')->references('id')->on('status')->onDelete('cascade');
         });
     }
