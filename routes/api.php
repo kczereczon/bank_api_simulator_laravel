@@ -19,3 +19,4 @@ Route::post("/user", [UserController::class, 'store']);
 Route::post("/user/login", [UserController::class, 'login']);
 Route::get("/user/{id}", [UserController::class, 'show']);
 Route::get("/banking-accounts/{id}", [UserController::class, 'getInfoBal']);
+Route::get("/transaction/{id}", [TransactionController::class, 'show']);
