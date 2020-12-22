@@ -25,7 +25,6 @@ class CreateTransactionsTable extends Migration
             $table->string('nrb_prin');
             $table->string('name_prin');
             $table->bigInteger('status_id')->unsigned();
-            $table->string('direction');
             $table->date('realisation_date');
             $table->timestamps();
 
