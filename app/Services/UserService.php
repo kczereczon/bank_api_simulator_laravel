@@ -20,7 +20,7 @@ class UserService
                 "active" => 1
             ]);
 
-            $bankService->createBankingAccount(!empty($balance) ? $balance : 0, $user);
+            $bankService->createBankingAccount($user, !empty($balance) ? $balance : 0);
 
             return $user->fresh();
         } else {

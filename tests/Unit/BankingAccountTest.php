@@ -74,7 +74,7 @@ class BankingAccountTest extends TestCase
 
         $generalAccount = $bankService->initBank($initBalance);
 
-        $bankingAccount = $bankService->createBankingAccount($newAccountBalance, $user);
+        $bankingAccount = $bankService->createBankingAccount($user, $newAccountBalance);
 
         $generalAccount = $generalAccount->fresh();
         $generalBankingAccount = $generalAccount->bankingAccounts()->where('general_account', true)->first();
