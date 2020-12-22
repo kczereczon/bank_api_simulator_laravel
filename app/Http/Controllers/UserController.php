@@ -9,9 +9,11 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use App\Models\BankingAccount;
 
 class UserController extends Controller
 {
+
     public function store(StoreUserRequest $request)
     {
         $userService = new UserService();
@@ -38,6 +40,13 @@ class UserController extends Controller
     {
         $user = new User();
         $user = $user->with('bankingAccounts')->findOrFail($id);
+
+        return response()->json($user);
+    }
+
+    public function getInfoBal($id)
+    {
+        $user = User::where('id', '=', $id)->with("bankingAccounts:id,user_id,nrb,transaction")->paginate();
 
         return response()->json($user);
     }

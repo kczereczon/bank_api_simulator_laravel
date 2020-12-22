@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransactionsTable extends Migration
+class CreateOperationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,25 +13,24 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('operations', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('transaction_id')->unsigned();
             $table->string('nrb_ben');
             $table->string('name_ben');
             $table->string('address_ben')->nullable();
             $table->float('amount');
-            $table->string('title');
             $table->bigInteger('prin_banking_account_id')->unsigned()->nullable();
             $table->bigInteger('ben_banking_account_id')->unsigned()->nullable();
+            $table->date('posting_date');
             $table->string('nrb_prin');
             $table->string('name_prin');
-            $table->bigInteger('status_id')->unsigned();
-            $table->string('direction');
-            $table->date('realisation_date');
+            $table->string('address_prin')->nullable();
             $table->timestamps();
 
-            $table->foreign('ben_banking_account_id')->references('id')->on('banking_accounts')->onDelete('cascade');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             $table->foreign('prin_banking_account_id')->references('id')->on('banking_accounts')->onDelete('cascade');
-            $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
+            $table->foreign('ben_banking_account_id')->references('id')->on('banking_accounts')->onDelete('cascade');
         });
     }
 
@@ -42,6 +41,6 @@ class CreateTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('operations');
     }
 }
