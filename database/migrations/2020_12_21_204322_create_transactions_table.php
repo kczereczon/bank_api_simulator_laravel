@@ -30,7 +30,7 @@ class CreateTransactionsTable extends Migration
             $table->timestamps();
 
             $table->foreign('ben_banking_account_id')->references('id')->on('banking_accounts')->onDelete('cascade');
-            $table->foreign('ben_banking_account_id')->references('id')->on('banking_accounts')->onDelete('cascade');
+            $table->foreign('prin_banking_account_id')->references('id')->on('banking_accounts')->onDelete('cascade');
             $table->foreign('status_id')->references('id')->on('status')->onDelete('cascade');
         });
     }
