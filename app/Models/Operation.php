@@ -14,7 +14,6 @@ class Operation extends Model
         'name_ben',
         'address_ben',
         'amount',
-        'posting_date',
         'nrb_prin',
         'name_prin',
         'address_prin'
@@ -36,3 +35,5 @@ class Operation extends Model
         return $this->belongsTo(BankingAccount::class, "operation_id");
     }
 }
+
+//jak widzisz co napisalem to zedytuj to dziex xd test 
