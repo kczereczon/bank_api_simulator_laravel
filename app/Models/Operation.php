@@ -35,3 +35,5 @@ class Operation extends Model
         return $this->belongsTo(BankingAccount::class, "operation_id");
     }
 }
+
+//jak widzisz co napisalem to zedytuj to dziex xd test 
