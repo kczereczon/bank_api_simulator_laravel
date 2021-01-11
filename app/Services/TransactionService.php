@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\BankingAccount;
 use App\Models\Transaction;
 use App\Models\Status;
+use DateTime;
 
 class TransactionService
 {
@@ -33,7 +34,7 @@ class TransactionService
             $operationService = new OperationService();
             if ($sum >= $amount) {
                 $operationService->createOperationForClient($transaction);
-                $transaction->update(['status_id' => Status::where("name", "=", "Zakończony pomyślnie")->firstOrFail()->id]);
+                $transaction->update(['status_id' => Status::where("name", "=", "Zakończony pomyślnie")->firstOrFail()->id, 'realisation_date' => new DateTime()]);
             } else {
                 $transaction->update(['status_id' => Status::where("name", "=", "Odzrzucony")->firstOrFail()->id]);
             }

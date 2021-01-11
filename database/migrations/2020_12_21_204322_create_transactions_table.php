@@ -25,7 +25,7 @@ class CreateTransactionsTable extends Migration
             $table->string('nrb_prin');
             $table->string('name_prin');
             $table->bigInteger('status_id')->unsigned();
-            $table->date('realisation_date')->nullable();
+            $table->dateTime('realisation_date')->nullable();
             $table->timestamps();
 
             $table->foreign('ben_banking_account_id')->references('id')->on('banking_accounts')->onDelete('cascade');

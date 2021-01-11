@@ -22,7 +22,7 @@ class TransactionController extends Controller
     public function index($id)
     {
         $tran = new Transaction();
-        $tran = $tran->where("ben_banking_account_id", $id)->orWhere("prin_banking_account_id", $id)->paginate(10);
+        $tran = $tran->where("ben_banking_account_id", $id)->orWhere("prin_banking_account_id", $id)->orderBy('realisation_date', 'desc')->paginate(10);
 
         return response()->json($tran);
     }
@@ -96,23 +96,18 @@ class TransactionController extends Controller
         //
     }
 
-    public function createTransaction(CreateTransactionRequest $request)
+    public function createTransaction(CreateTransactionRequest $request, $id)
     {
         $transactions = new Transaction();
         /** @var Builder $prin_account */
         $prin_account = new BankingAccount();
+        $prin_account = $prin_account->findOrFail($id);
         $ben_account = new BankingAccount();
 
         $bankingAccountService = new BankService();
         $transactionService = new TransactionService();
 
-        if ($bankingAccountService->validateBankNumber($request->nrb_prin)) {
-            $prin_account = $prin_account->where('nrb', 'LIKE', "%" . $request->nrb_prin)->firstOrFail();
-        } else {
-            throw new Exception("Nieprawidłowy numer konta zleceniodawcy!");
-        }
-
-        if ($bankingAccountService->validateBankNumber($request->nrb_ben)) {
+        if ($bankingAccountService->validateIbanNumber($request->nrb_ben)) {
             $ben_account = $ben_account->where('nrb', 'LIKE', "%" . $request->nrb_ben)->first();
         } else {
             throw new Exception("Nieprawidłowy numer konta beneficjenta!");

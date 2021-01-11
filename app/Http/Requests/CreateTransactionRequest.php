@@ -29,9 +29,6 @@ class CreateTransactionRequest extends FormRequest
             'address_ben' => 'optional',
             'amount'=> 'required',
             'title'=> 'required',
-            'nrb_prin'=> 'required',
-            'name_prin'=> 'required',
-            'realisation_date'=> 'required'
         ];
     }
 }
