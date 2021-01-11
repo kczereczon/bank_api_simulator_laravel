@@ -18,7 +18,9 @@ class TransactionService
 
         if($prinAcc){
             $sum = $prinAcc->get('balance');
+            $operationService = new OperationService();
             if ($sum >= $amount){
+                $operationService->createOperationForClient($transaction);
                 $transaction = $transaction->update(['status_id'=> Status::where("name", "=", "Zakończony pomyślnie")->firstOrFail()->id]);
             } else {
                 $transaction = $transaction->update(['status_id'=> Status::where("name", "=", "Odzrzucony")->firstOrFail()->id]);

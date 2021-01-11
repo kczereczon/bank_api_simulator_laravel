@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Status;
 use Illuminate\Database\Seeder;
 
 class StatusSeeder extends Seeder
@@ -13,9 +14,9 @@ class StatusSeeder extends Seeder
      */
     public function run()
     {
-        Status::create("Oczekujący");
-        Status::create("W trakcie realizacji");
-        Status::create("Zakończony pomyślnie");
-        Status::create("Odrzucony");
+        Status::create(["name" => "Oczekujący"]);
+        Status::create(["name" => "W trakcie realizacji"]);
+        Status::create(["name" => "Zakończony pomyślnie"]);
+        Status::create(["name" => "Odrzucony"]);
     }
 }

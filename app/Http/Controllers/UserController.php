@@ -31,7 +31,7 @@ class UserController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = User::where('email', $request->email)->with('bankingAccounts')->firstOrFail();
 
         return response()->json(['status'=>"success", 'user' => $user]);
     }

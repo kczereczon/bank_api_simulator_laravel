@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,4 +21,5 @@ Route::post("/user/login", [UserController::class, 'login']);
 Route::get("/user/{id}", [UserController::class, 'show']);
 Route::post("/transaction", [TransactionController::class, 'createTransaction']);
 Route::get("/banking-accounts/{id}", [UserController::class, 'getInfoBal']);
+Route::get("/transactions/{id}", [TransactionController::class, 'index']);
 Route::get("/transaction/{id}", [TransactionController::class, 'show']);

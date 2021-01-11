@@ -143,17 +143,15 @@ class BankService
         $nrb = $bankService->generateIban();
 
         $bankingAccount = $user->bankingAccounts()->create([
-            "balance" => $balance,
             "nrb" => $nrb,
+            "balance" => 0,
             "general_account" => $general
         ]);
 
         if(!$general){
             $generalAccount = BankingAccount::where('general_account', true)->first();
-
-            $generalAccount->update([
-                'balance' => $generalAccount->balance+$balance
-            ]);
+            $transactionService = new TransactionService();
+            $transactionService = $transactionService->createInternalTransaction($bankingAccount->id, $generalAccount->id, $balance, "Wpłata inicjalizująca");
         }
 
         return $bankingAccount;

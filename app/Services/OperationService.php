@@ -9,7 +9,7 @@ use App\Models\BankingAccount;
 use App\Models\User;
 use Exception;
 
-class UserService
+class OperationService
 {
     public function createOperationForClient(Transaction $transaction)
     {
