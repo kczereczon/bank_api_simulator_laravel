@@ -16,8 +16,10 @@ class Operation extends Model
         'amount',
         'nrb_prin',
         'name_prin',
-        'address_prin'
-
+        'address_prin',
+        'transaction_id',
+        'prin_banking_account_id',
+        'ben_banking_account_id'
     ];
 
     public function benAccount()

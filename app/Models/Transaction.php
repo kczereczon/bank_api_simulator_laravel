@@ -17,7 +17,10 @@ class Transaction extends Model
         "title",
         "nrb_prin",
         "name_prin",
-        "realisation_date"
+        "realisation_date",
+        "status_id",
+        "prin_banking_account_id",
+        "ben_banking_account_id"
     ];
     
     public function benAccount()
