@@ -22,7 +22,6 @@ class CreateOperationsTable extends Migration
             $table->float('amount');
             $table->bigInteger('prin_banking_account_id')->unsigned()->nullable();
             $table->bigInteger('ben_banking_account_id')->unsigned()->nullable();
-            $table->date('posting_date');
             $table->string('nrb_prin');
             $table->string('name_prin');
             $table->string('address_prin')->nullable();

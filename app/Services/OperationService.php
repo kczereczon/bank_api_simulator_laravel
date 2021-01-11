@@ -6,14 +6,13 @@ use App\Exceptions\BankNotInitializedException;
 use App\Models\Transaction;
 use App\Models\Operation;
 use App\Models\BankingAccount;
-use App\Models\User;
 use Exception;
 
 class UserService
 {
     public function createOperationForClient(Transaction $transaction)
     {
-        if($transaction->ben_banking_account_id != "null"){
+        if(!empty($transaction->ben_banking_account_id)){
         $operation = Operation::create([
 
             "transaction_id" => $transaction->id,
@@ -49,7 +48,6 @@ class UserService
                 "name_ben" => $transaction->name_ben,
                 "address_ben" => $transaction->address_ben,
                 "amount" => $transaction->amount,
-                "posting_date" => "null",
                 "nrb_prin" => $transaction->nrb_prin,
                 "address_prin" => $transaction->address_prin,
                 "name_prin" => $transaction->name_prin,                

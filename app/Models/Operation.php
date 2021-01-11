@@ -14,7 +14,6 @@ class Operation extends Model
         'name_ben',
         'address_ben',
         'amount',
-        'posting_date',
         'nrb_prin',
         'name_prin',
         'address_prin'
