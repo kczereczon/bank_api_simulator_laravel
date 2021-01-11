@@ -33,16 +33,16 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $generalUser);
     }
 
-    public function testCreateUserWithInit()
-    {
-        $bankService = new BankService();
-        $generalUser = $bankService->initBank(500000);
+    // public function testCreateUserWithInit()
+    // {
+    //     $bankService = new BankService();
+    //     $generalUser = $bankService->initBank(500000);
 
-        $userFake = User::factory()->make()->toArray();
+    //     $userFake = User::factory()->make()->toArray();
 
-        $request = $this->json('POST', '/api/user', $userFake);
-        $request->assertStatus(200);
-    }
+    //     $request = $this->json('POST', '/api/user', $userFake);
+    //     $request->assertStatus(200);
+    // }
 
     public function testLogin()
     {
