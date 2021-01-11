@@ -144,7 +144,7 @@ class BankService
 
         $bankingAccount = $user->bankingAccounts()->create([
             "nrb" => $nrb,
-            "balance" => 0,
+            "balance" => $general ? $balance : 0,
             "general_account" => $general
         ]);
 

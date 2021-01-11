@@ -20,7 +20,6 @@ class OperationService
                 "name_ben" => $transaction->name_ben,
                 "address_ben" => $transaction->address_ben,
                 "amount" => $transaction->amount,
-                "posting_date" => "null",
                 "nrb_prin" => $transaction->nrb_prin,
                 "address_prin" => $transaction->address_prin,
                 "name_prin" => $transaction->name_prin,
