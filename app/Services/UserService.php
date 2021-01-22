@@ -6,10 +6,11 @@ use App\Exceptions\BankNotInitializedException;
 use App\Models\BankingAccount;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 class UserService
 {
-    public function createUser($name, $email, $balance): User
+    public function createUser($name, $email, $balance, bool $returnAccount = false): Model
     {
         $bankService = new BankService();
         $generalAccount = BankingAccount::where('general_account', true)->first();
@@ -20,7 +21,11 @@ class UserService
                 "active" => 1
             ]);
 
-            $bankService->createBankingAccount($user, !empty($balance) ? $balance : 0);
+            $account = $bankService->createBankingAccount($user, !empty($balance) ? $balance : 0);
+
+            if($returnAccount) {
+                return $account;
+            }
 
             return $user->fresh();
         } else {

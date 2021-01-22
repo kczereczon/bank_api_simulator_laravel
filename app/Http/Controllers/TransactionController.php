@@ -6,6 +6,7 @@ use App\Http\Requests\CreateTransactionRequest;
 use App\Models\BankingAccount;
 use App\Models\Transaction;
 use App\Services\BankService;
+use App\Services\OperationService;
 use App\Services\TransactionService;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -107,15 +108,16 @@ class TransactionController extends Controller
         $bankingAccountService = new BankService();
         $transactionService = new TransactionService();
 
-        if ($bankingAccountService->validateIbanNumber($request->nrb_ben)) {
-            $ben_account = $ben_account->where('nrb', 'LIKE', "%" . $request->nrb_ben)->first();
-        } else {
-            throw new Exception("Nieprawidłowy numer konta beneficjenta!");
-        }
+        $transaction = null;
 
-        if ($ben_account != null) {
-            $transactionService->createInternalTransaction($ben_account->id, $prin_account->id, $request->amount, $request->title);
-            response()->json('Sukces', 200);
+        if($prin_account->balance >= $request->amount) { 
+            if ($bankingAccountService->validateIbanNumber($request->nrb_ben)) {
+                $ben_account = $ben_account->where('nrb', 'LIKE', "%" . $request->nrb_ben)->first();
+                $transaction = $transactionService->createTransaction($request->nrb_ben, $prin_account->nrb, $request->amount, $request->title);
+            } else {
+                $transaction = $transactionService->createTransaction($request->nrb_ben, $prin_account->nrb, $request->amount, $request->title, $request->name_ben, $request->address_ben);
+            }
         }
+        response()->json('Sukces', 200);
     }
 }

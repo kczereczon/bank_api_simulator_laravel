@@ -2,18 +2,19 @@
 
 namespace App\Services;
 
+use App\Exceptions\NoMoneyOnAccount;
 use App\Models\BankingAccount;
 use App\Models\Transaction;
 use App\Models\Status;
 use DateTime;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TransactionService
 {
-    public function createInternalTransaction(int $idBenAcc, int $idPrinAcc, float $amount, string $title)
+    public function createTransactionModel($prinAcc, $benAcc, float $amount, string $title, string $name = "", string $address = "")
     {
         $status = Status::where("name", "=", "Oczekujący")->firstOrFail();
-        $benAcc = BankingAccount::with('user')->findOrFail($idBenAcc);
-        $prinAcc = BankingAccount::with('user')->findOrFail($idPrinAcc);
 
         $transaction = new Transaction();
         $transaction = $transaction->create([
@@ -27,19 +28,67 @@ class TransactionService
             'name_prin' => $prinAcc->user->name,
             'status_id' => $status->id
         ]);
+
         $transaction->update(['status_id' => Status::where("name", "=", "W trakcie realizacji")->firstOrFail()->id]);
 
-        if ($prinAcc) {
-            $sum = $prinAcc->balance;
-            $operationService = new OperationService();
-            if ($sum >= $amount) {
-                $operationService->createOperationForClient($transaction);
-                $transaction->update(['status_id' => Status::where("name", "=", "Zakończony pomyślnie")->firstOrFail()->id, 'realisation_date' => new DateTime()]);
-            } else {
-                $transaction->update(['status_id' => Status::where("name", "=", "Odzrzucony")->firstOrFail()->id]);
-            }
+        return $transaction;
+    }
+
+    public function createTransaction(string $ben_nrb, string $prin_nrb, float $amount, string $title, string $name = "", string $address = "")
+    {
+        $outside = null;
+
+        $benAcc = BankingAccount::with('user')->where("nrb", "=", $ben_nrb)->first();
+        $prinAcc = BankingAccount::with('user')->where("nrb", "=", $prin_nrb)->first();
+
+        if (empty($prinAcc)) {
+            $prinAcc = $this->createOutsideModel($prin_nrb, $name, $address);
+            $outside = "prin";
         } else {
-            $transaction->update(['status_id' => Status::where("name", "=", "Odzrzucony")->firstOrFail()->id]);
+            if($prinAcc->balance < $amount) {
+                throw new NoMoneyOnAccount("Brak środków na koncie bankowym");
+            }
         }
+        
+        if (empty($benAcc)) {
+            $benAcc = $this->createOutsideModel($ben_nrb, $name, $address);
+            $outside = "ben";
+        }
+
+        if(empty($outside)) {
+            $transaction = $this->createTransactionModel($prinAcc, $benAcc, $amount, $title);
+            $this->createOperations($transaction);
+            
+            return true;
+        } else {
+            $transaction = $this->createTransactionModel($prinAcc, $benAcc, $amount, $title, $name, $address);
+            $this->createOperations($transaction, true, $outside);
+
+            return true;
+        }
+    }
+
+    public function createOperations(Transaction $transaction, bool $outside = false, string $who = "")
+    {
+        $operationService = new OperationService();
+        $operationService->createOperationForClient($transaction);
+        if ($outside) {
+            $operationService->createOperationForMainAccount($transaction, $who);
+        }
+        $transaction->update(['status_id' => Status::where("name", "=", "Zakończony pomyślnie")->firstOrFail()->id, 'realisation_date' => new DateTime()]);
+        
+        return true;
+    }
+
+    public function createOutsideModel(string $ben_nrb, string $name, string $address)
+    {
+        return (object) [
+            "id" => null,
+            "nrb" => $ben_nrb,
+            "user" => (object) [
+                "name" => $name,
+                "address" => $address
+            ]
+        ];
     }
 }

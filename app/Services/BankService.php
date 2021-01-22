@@ -151,7 +151,7 @@ class BankService
         if(!$general){
             $generalAccount = BankingAccount::where('general_account', true)->first();
             $transactionService = new TransactionService();
-            $transactionService = $transactionService->createInternalTransaction($bankingAccount->id, $generalAccount->id, $balance, "Wpłata inicjalizująca");
+            $transactionService = $transactionService->createTransaction($bankingAccount->nrb, $generalAccount->nrb, $balance, "Wpłata inicjalizująca");
         }
 
         return $bankingAccount;

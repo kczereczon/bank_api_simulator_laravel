@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use App\Services\BankService;
+use Database\Seeders\StatusSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -62,26 +63,28 @@ class BankingAccountTest extends TestCase
         $this->assertEquals("04", $bankService->generateControlSumOfIban($iban));
     }
 
-    // public function testCreateBankingAccount()
-    // {
-    //     $initBalance = rand(0, 400000);
-    //     $newAccountBalance = rand(0, 200000);;
+    public function testCreateBankingAccount()
+    {
+        $this->seed(StatusSeeder::class);
 
-    //     $bankService = new BankService();
+        $initBalance = rand(200000, 400000);
+        $newAccountBalance = rand(0, 200000);;
 
-    //     /** @var User $user */
-    //     $user = User::factory()->count(1)->create()->first();
+        $bankService = new BankService();
 
-    //     $generalAccount = $bankService->initBank($initBalance);
+        /** @var User $user */
+        $user = User::factory()->count(1)->create()->first();
 
-    //     $bankingAccount = $bankService->createBankingAccount($user, $newAccountBalance);
+        $generalAccount = $bankService->initBank($initBalance);
 
-    //     $generalAccount = $generalAccount->fresh();
-    //     $generalBankingAccount = $generalAccount->bankingAccounts()->where('general_account', true)->first();
+        $bankingAccount = $bankService->createBankingAccount($user, $newAccountBalance);
 
-    //     $user = $user->fresh();
+        $generalAccount = $generalAccount->fresh();
+        $generalBankingAccount = $generalAccount->bankingAccounts()->where('general_account', true)->first();
 
-    //     $this->assertEquals($initBalance+$newAccountBalance, $generalBankingAccount->balance);
-    //     $this->assertEquals($user->id, $bankingAccount->user_id);
-    // }
+        $user = $user->fresh();
+
+        $this->assertEquals($initBalance-$newAccountBalance, $generalBankingAccount->balance);
+        $this->assertEquals($user->id, $bankingAccount->user_id);
+    }
 }

@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\BankingAccount;
 use App\Models\User;
 use App\Services\BankService;
+use Database\Seeders\StatusSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -33,16 +34,17 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $generalUser);
     }
 
-    // public function testCreateUserWithInit()
-    // {
-    //     $bankService = new BankService();
-    //     $generalUser = $bankService->initBank(500000);
+    public function testCreateUserWithInit()
+    {
+        $this->seed(StatusSeeder::class);
+        $bankService = new BankService();
+        $generalUser = $bankService->initBank(500000);
 
-    //     $userFake = User::factory()->make()->toArray();
+        $userFake = User::factory()->make()->toArray();
 
-    //     $request = $this->json('POST', '/api/user', $userFake);
-    //     $request->assertStatus(200);
-    // }
+        $request = $this->json('POST', '/api/user', $userFake);
+        $request->assertStatus(200);
+    }
 
     public function testLogin()
     {
