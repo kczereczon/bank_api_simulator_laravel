@@ -64,6 +64,11 @@ class TransactionService
             $transaction = $this->createTransactionModel($prinAcc, $benAcc, $amount, $title, $name, $address);
             $this->createOperations($transaction, true, $outside);
 
+            if($outside == "ben") {
+                $unitService = new UnitOfAccountService();
+                $unitService->sendToUnit($transaction);
+            }
+
             return true;
         }
     }

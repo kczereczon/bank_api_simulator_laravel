@@ -28,5 +28,6 @@
         <server name="SESSION_DRIVER" value="array"/>
         <server name="TELESCOPE_ENABLED" value="false"/>
         <server name="BANK_NUMBER" value="3413303"/>
+        <server name="UNIT_OF_ACCOUNT_API" value="http://91.189.216.237:8000/api/session/test"/>
     </php>
 </phpunit>

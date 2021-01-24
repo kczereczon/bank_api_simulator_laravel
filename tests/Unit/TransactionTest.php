@@ -105,9 +105,9 @@ class TransactionTest extends TestCase
 
         $this->assertTrue($transaction);
         $bankingAccountPrim = $bankingAccountPrim->fresh();
-        $this->assertEquals(500, $bankingAccountPrim->balance);
+        $this->assertEquals(500+ 2*500, $bankingAccountPrim->balance);
         $generalAccount = $generalAccount->fresh();
-        $this->assertEquals($generalMoneyBeforeTransaction-500, $generalAccount->balance);
+        $this->assertEquals($generalMoneyBeforeTransaction-500 + 2*500, $generalAccount->balance);
     }
 
     public function testTransactionOutsideButInto()
