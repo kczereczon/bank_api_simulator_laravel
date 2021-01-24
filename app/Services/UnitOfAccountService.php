@@ -66,7 +66,7 @@ class UnitOfAccountService
                     $payment['Amount']*2,
                     $payment['Title'],
                     $split[0],
-                    $split[1]
+                    isset($split[1]) ? $split[1] : ""
                 );
             }
         }
