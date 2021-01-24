@@ -111,8 +111,8 @@ class TransactionController extends Controller
         $transaction = null;
 
         if($prin_account->balance >= $request->amount) { 
-            if ($bankingAccountService->validateIbanNumber($request->nrb_ben)) {
-                $ben_account = $ben_account->where('nrb', 'LIKE', "%" . $request->nrb_ben)->first();
+            $ben_account = $ben_account->where('nrb', 'LIKE', "%" . $request->nrb_ben)->first();
+            if ($bankingAccountService->validateIbanNumber($request->nrb_ben) && $ben_account) {
                 $transaction = $transactionService->createTransaction($request->nrb_ben, $prin_account->nrb, $request->amount, $request->title);
             } else {
                 $transaction = $transactionService->createTransaction($request->nrb_ben, $prin_account->nrb, $request->amount, $request->title, $request->name_ben, $request->address_ben);

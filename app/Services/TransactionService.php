@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TransactionService
 {
-    public function createTransactionModel($prinAcc, $benAcc, float $amount, string $title, string $name = "", string $address = "")
+    public function createTransactionModel($prinAcc, $benAcc, float $amount, string $title, string $name = "", $address = "")
     {
         $status = Status::where("name", "=", "Oczekujący")->firstOrFail();
 
@@ -34,7 +34,7 @@ class TransactionService
         return $transaction;
     }
 
-    public function createTransaction(string $ben_nrb, string $prin_nrb, float $amount, string $title, string $name = "", string $address = "")
+    public function createTransaction(string $ben_nrb, string $prin_nrb, float $amount, string $title, string $name = "", $address = "")
     {
         $outside = null;
 
@@ -85,7 +85,7 @@ class TransactionService
         return true;
     }
 
-    public function createOutsideModel(string $ben_nrb, string $name, string $address)
+    public function createOutsideModel(string $ben_nrb, string $name, $address)
     {
         return (object) [
             "id" => null,
