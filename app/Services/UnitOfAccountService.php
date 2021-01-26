@@ -63,7 +63,7 @@ class UnitOfAccountService
                 $transactionService->createTransaction(
                     $payment['CreditedAccountNumber'],
                     $payment['DebitedAccountNumber'],
-                    $payment['Amount']*2,
+                    $payment['Amount'],
                     $payment['Title'],
                     $split[0],
                     isset($split[1]) ? $split[1] : ""
